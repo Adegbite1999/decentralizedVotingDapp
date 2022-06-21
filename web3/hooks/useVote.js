@@ -47,11 +47,11 @@ export const useVoteDapp  = () =>{
         }
     },[])
 
-    const addCandidate = useCallback(async(address, name,callback) =>{
+    const addCandidate = useCallback(async(address, id,callback) =>{
         if(!connected) throw new Error("You're not connected");
         if(!voteContract.current) return;
         try {
-            voteContract.current.AddCandidate(address, name)
+            voteContract.current.AddCandidate(address, id)
             .then(callback)
             .catch(callback)
         } catch (error) {

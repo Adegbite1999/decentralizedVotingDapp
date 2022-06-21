@@ -6,6 +6,7 @@ import { useVoteDapp } from '../../web3/hooks/useVote';
 import { useAppContext } from '../../context/appState';
 import {toast} from "react-toastify";
 import {useRouter} from "next/router"
+import Link from 'next/link';
 
 function CreateVote() {
   const router = useRouter()
@@ -38,7 +39,9 @@ function CreateVote() {
     <LayOut>
     <section>
         <div>
-
+        <div>
+          <Link  href="/votes/allVotes"><span className='text-white ml-12 cursor-pointer'>Back</span></Link>
+        </div>
         <div className="flex justify-center">
           <div>
             <h1 className="text-center text-white font-bold text-2xl mb-6">

@@ -28,9 +28,18 @@ console.log(connected)
     const nameField = name.current.value;
 
     await addCandidate(addressField,nameField, async(res,err) =>{
-      if(!res.hash)
-      return toast.error(err)
+    
+      try {
+        if(!res.hash)
+        return toast.error(err)
+        nameField="",
+      addressField=""
       toast.success("candidate added successfully")
+      } catch (error) {
+        toast.error(error)
+      }
+      
+    
 
 
     })
@@ -52,11 +61,11 @@ console.log(connected)
               />
             </div>
             <div>
-              <label className="block text-white text-center">Candidate Name</label>
+              <label className="block text-white text-center">Candidate id</label>
               <input
               ref={name}
                 className="outline-none border-none bg-gray-300 py-2 pl-4 pr-4"
-                type="text"
+                type="number"
               />
             </div>
             <div className='flex justify-center'>
