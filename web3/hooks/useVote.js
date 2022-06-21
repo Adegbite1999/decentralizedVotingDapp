@@ -71,16 +71,17 @@ export const useVoteDapp  = () =>{
     }
 
     const exec = async() =>{
-        const allId = await voteContract.current.allIds()
-        const allPoll = await Promise.all(
-            allId.map((id) =>{
+        const allId = await voteContract.current?.allIds()
+        const allPoll = await Promise?.all(
+            allId?.map((id) =>{
                 return VoteDetails(id)
             })
         )
-        const result = allPoll.map((item,index) =>{
+        console.log(allPoll)
+        const result = allPoll?.map((item,index) =>{
             return {
                 name:item.name,
-                id:index,
+                id:item.id.toString(),
                 numOfCandidate:item.currentNoOfCandidates,
                 status:item.voting
             }

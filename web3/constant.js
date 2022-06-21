@@ -1,5 +1,5 @@
-export const contractAddress = "0xdf48eC7e08064B6F9077d2bE7bd4a5832B8E77d3"
-export const rpc_url = "https://polygon-mumbai.g.alchemy.com/v2/hcN-MndA9xYG_QXhrON9jBilpC_GzI1L"
+export const contractAddress = "0x531D8b6e31969317843d73dE27D5B226169b423C"
+export const rpc_url = "https://eth-rinkeby.alchemyapi.io/v2/LBU4Gg9IudCK7JoySNaYkMaldjSHh8su"
 
 
 // export const RPC_URL = {

@@ -70,7 +70,7 @@ function AllVotes() {
           <tbody>
             
               {
-                polls?.map((item) =>{
+              polls?.length ===0 ? <h1 className="text-white text-center text-2xl">No Polls created yet</h1> :  polls?.map((item) =>{
                   return (
                     <tr>
                     <td>{item.id}</td>
