@@ -7,117 +7,128 @@ import LayOut from "../../layout/LayOut";
 import { useVoteDapp } from "../../web3/hooks/useVote";
 import { useAppContext } from "../../context/appState";
 import { poll } from "ethers/lib/utils";
+import { useRouter } from "next/router";
 
 function AllVotes() {
-  const {connected} = useAppContext()
-   const {getAllVotingPoll, exec} =    useVoteDapp()
+  const { connected } = useAppContext();
+  const { getAllVotingPoll, exec } = useVoteDapp();
 
-   const [polls, setPolls] = useState()
+  const [polls, setPolls] = useState();
 
-
-
-    useEffect(() =>{
-      if(connected){
-         callExec()
-        
-        }
-
-    },[connected])
-
-    
-    const callExec = async() =>{
-      const result =  await exec()
-      setPolls(result)
-      // setPolls(result)
+  useEffect(() => {
+    if (connected) {
+      callExec();
     }
-    console.log(connected)
+  }, [connected]);
 
-//  const getPolls = async() =>{
-//   const result = await getAllVotingPoll()
-//   setPolls(result)
-//  }
+  const callExec = async () => {
+    const result = await exec();
+    setPolls(result);
+    // setPolls(result)
+  };
+  console.log(connected);
 
-//  useEffect(() =>{
-//   if(connected){
-//     getPolls()
-//   }
-// },[connected])
+  //  const getPolls = async() =>{
+  //   const result = await getAllVotingPoll()
+  //   setPolls(result)
+  //  }
 
-// console.log(polls)
+  //  useEffect(() =>{
+  //   if(connected){
+  //     getPolls()
+  //   }
+  // },[connected])
+
+  // console.log(polls)
+
+  const router = useRouter();
 
   const [show, setShow] = useState(false);
   return (
     <LayOut>
-    <section className="text-white  bg-create">
-      <div className="max-w-6xl mx-auto py-12">
-        <div className=" flex items-end space-x-56 justify-end">
-          <h3 className="align-self-center text-3xl font-bold">
-            Available polls
-          </h3>
-          <button className="bg-transparent font-bold justify-self-end text-[#f5f5f5] border-2 py-2 pl-6 pr-6 border-[#00E3A5]">
-            <Link href="/create/vote">Create Polls</Link>          </button>
-        </div>
-        <table class="w-full border-collapse mt-4	 border-2 text-center">
-          <thead>
-            <tr>
-              <th>S/N</th>
-              <th>Name</th>
-              <th>Number of candidate</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            
-              {
-              polls?.length ===0 ? <h1 className="text-white text-center text-2xl">No Polls created yet</h1> :  polls?.map((item) =>{
+      <section className="text-white  bg-create">
+        <div className="max-w-6xl mx-auto py-12">
+          <div className=" flex items-end space-x-56 justify-end">
+            <h3 className="align-self-center text-3xl font-bold">
+              Available polls
+            </h3>
+            <button className="bg-transparent font-bold justify-self-end text-[#f5f5f5] border-2 py-2 pl-6 pr-6 border-[#00E3A5]">
+              <Link href="/create/vote">Create Polls</Link>{" "}
+            </button>
+          </div>
+          <table class="w-full border-collapse mt-4	 border-2 text-center">
+            <thead>
+              <tr>
+                <th>S/N</th>
+                <th>Name</th>
+                <th>Number of candidate</th>
+                <th>Status</th>
+                <th>Action</th>
+                <th>View Poll</th>
+              </tr>
+            </thead>
+            <tbody>
+              {polls?.length === 0 ? (
+                <h1 className="text-white text-center text-2xl">
+                  No Polls created yet
+                </h1>
+              ) : (
+                polls?.map((item) => {
                   return (
                     <tr>
-                    <td>{item.id}</td>
-              <td>{item.name}</td>
-              <td>{item.numOfCandidate}</td>
-              <td>{item.status ===false? "false" : "true"}</td>
-              <td>
-                <button
-                  onClick={() => setShow(true)}
-                  className="bg-[#00E3A5] pr-6 rounded-sm pl-6 font-bold"
-                >
+                      <td>{item.id}</td>
+                      <td>{item.name}</td>
+                      <td>{item.numOfCandidate}</td>
+                      <td>{item.status === false ? "false" : "true"}</td>
+                      <td>
+                        <button
+                          onClick={() => setShow(true)}
+                          className="bg-[#00E3A5] pr-6 rounded-sm pl-6 font-bold"
+                        >
+                          Vote
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="bg-[#00E3A5] pr-6 rounded-sm pl-6 font-bold"
+                          onClick={() => router.push(`/dashboard/${item.id}`)}
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <Image src={logo} alt="" />
+        </div>
+        <Modal show={show} onClose={() => setShow(false)}>
+          <div className="flex justify-center">
+            <div>
+              <h1 className="text-center font-bold text-2xl mb-6">
+                Presidential polls
+              </h1>
+              <div>
+                <label className="block text-center">Candidate Address</label>
+                <input
+                  className="outline-none border-none bg-gray-300 py-2 pl-4 pr-4"
+                  type="text"
+                />
+              </div>
+              <div className="flex justify-center mt-8">
+                <button className="bg-[#00E3A5] pr-6 rounded-sm pl-6 font-bold">
                   Vote
                 </button>
-              </td>
-                    </tr>
-                  )
-                })
-              }
-          </tbody>
-        </table>
-      </div>
-
-      <div>
-        <Image src={logo} alt="" />
-      </div>
-      <Modal show={show} onClose={() => setShow(false)}>
-        <div className="flex justify-center">
-          <div>
-            <h1 className="text-center font-bold text-2xl mb-6">
-              Presidential polls
-            </h1>
-            <div>
-              <label className="block text-center">Candidate Address</label>
-              <input
-                className="outline-none border-none bg-gray-300 py-2 pl-4 pr-4"
-                type="text"
-              />
-            </div>
-            <div className="flex justify-center mt-8">
-              <button className="bg-[#00E3A5] pr-6 rounded-sm pl-6 font-bold">
-                Vote
-              </button>
+              </div>
             </div>
           </div>
-        </div>
-      </Modal>
-    </section>
+        </Modal>
+      </section>
     </LayOut>
   );
 }
