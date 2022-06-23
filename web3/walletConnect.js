@@ -41,7 +41,7 @@ export default function web3Connector (){
 
   const eagerConnect = useCallback(async () =>{
     const networkId = await window.ethereum.request({method:"eth_chainId"})
-    if(Number(networkId) !== 4) return
+    if(Number(networkId) !== 80001) return
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const accounts = await provider.listAccounts();
     if(!accounts.length) return
@@ -55,7 +55,7 @@ export default function web3Connector (){
       const networkId = await window.ethereum.request({
         method: "eth_chainId",
       });
-      if (Number(networkId) !== 4) return;
+      if (Number(networkId) !== 80001) return;
       setConnected(true);
       setAccount(accounts[0]);
       localStorage.setItem("address", accounts[0]);
@@ -73,12 +73,12 @@ export default function web3Connector (){
 
   
   const handleChainChanged = useCallback(async (chainid) => {
-    if (Number(chainid) !== 4) {
+    if (Number(chainid) !== 80001) {
       setConnected(false);
       setAccount("");
       localStorage.removeItem("address");
       toast.error(
-        "You are connected to the wrong network, please switch to rinkeby"
+        "You are connected to the wrong network, please switch to mumbai"
       );
     } else {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
