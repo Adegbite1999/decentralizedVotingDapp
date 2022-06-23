@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../public/images.svg";
 import Image from "next/image";
-import Modal from "../../components/Modal";
 import Link from "next/link";
 import LayOut from "../../layout/LayOut";
 import { useVoteDapp } from "../../web3/hooks/useVote";
 import { useAppContext } from "../../context/appState";
-import { poll } from "ethers/lib/utils";
 import { useRouter } from "next/router";
+import Vote from "../vote/[id]";
 
 function AllVotes() {
   const { connected } = useAppContext();
-  const { getAllVotingPoll, exec } = useVoteDapp();
+  const {  exec,VoteDetails } = useVoteDapp();
 
   const [polls, setPolls] = useState();
+  // const [show,setShow] = useState(false)
 
   useEffect(() => {
     if (connected) {
@@ -24,26 +24,16 @@ function AllVotes() {
   const callExec = async () => {
     const result = await exec();
     setPolls(result);
-    // setPolls(result)
   };
-  console.log(connected);
 
-  //  const getPolls = async() =>{
-  //   const result = await getAllVotingPoll()
-  //   setPolls(result)
-  //  }
 
-  //  useEffect(() =>{
-  //   if(connected){
-  //     getPolls()
-  //   }
-  // },[connected])
 
-  // console.log(polls)
+
+
 
   const router = useRouter();
 
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
   return (
     <LayOut>
       <section className="text-white  bg-create">
@@ -82,7 +72,7 @@ function AllVotes() {
                       <td>{item.status === false ? "false" : "true"}</td>
                       <td>
                         <button
-                          onClick={() => setShow(true)}
+                          onClick={() => router.push(`/vote/${item.id}`)}
                           className="bg-[#00E3A5] pr-6 rounded-sm pl-6 font-bold"
                         >
                           Vote
@@ -107,7 +97,8 @@ function AllVotes() {
         <div>
           <Image src={logo} alt="" />
         </div>
-        <Modal show={show} onClose={() => setShow(false)}>
+        {/* <Vote show={show} setShow={setShow}/> */}
+        {/* <Modal show={show} onClose={() => setShow(false)}>
           <div className="flex justify-center">
             <div>
               <h1 className="text-center font-bold text-2xl mb-6">
@@ -127,7 +118,7 @@ function AllVotes() {
               </div>
             </div>
           </div>
-        </Modal>
+        </Modal> */}
       </section>
     </LayOut>
   );

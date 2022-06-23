@@ -28,11 +28,12 @@ export const useVoteDapp  = () =>{
 
     },[connected])
 
-    const init = useCallback(async() =>{
-     voteContract.current =  await getVoteDapp(contractAddress, signer.current || provider.current)
+    // console.log(voteContract.current)
+
+    const init = useCallback(() =>{
+     voteContract.current =   getVoteDapp(contractAddress, signer.current || provider.current)
     },[])
 
-    console.log(voteContract.current)
 
 
     const createPoll = useCallback(async(name, num,callback) =>{
@@ -47,8 +48,20 @@ export const useVoteDapp  = () =>{
         }
     },[])
 
-    const addCandidate = useCallback(async(address, id,callback) =>{
+    const setPollState = useCallback(async(id,callback) =>{
         if(!connected) throw new Error("You're not connected");
+        if(!voteContract.current) return;
+        try {
+            voteContract.current.setVotingState(id)
+            .then(callback)
+            .catch(callback)
+        } catch (error) {
+            throw new Error ("something went wrong")
+        }
+    },[])
+
+    const addCandidate = useCallback(async(address, id,callback) =>{
+        // if(!connected) throw new Error("You're not connected");
         if(!voteContract.current) return;
         try {
             voteContract.current.AddCandidate(address, id)
@@ -59,25 +72,52 @@ export const useVoteDapp  = () =>{
         }
     },[])
 
+    
 
-    const VoteDetails = async(id) =>{
-        if(!connected)throw new Error("You're not connected")
+    const VoteDetails = useCallback(async(id) =>{
+        // if(!!connected) throw Error("not connected")
+        if(!voteContract.current)return;
         try {
             const vote = await voteContract.current.getVotePollProps(id)
             return vote
+        } catch (error) {
+         console.error(error) 
+        }
+    },[])
+
+    const voted = useCallback(async(id,callback) =>{
+        // if(!connected) throw new Error("You're not connected");
+        if(!voteContract.current) return;
+        try {
+            voteContract.current.vote(id)
+            .then(callback)
+            .catch(callback)
+        } catch (error) {
+            throw new Error ("something went wrong")
+        }
+    },[])
+
+    const revealWinnerCandidate = async(id) =>{
+        if(!voteContract.current)return;
+        try {
+            const winner = await voteContract.current.revealWinner(id)
+            return winner
         } catch (error) {
          console.error(error)   
         }
     }
 
+
     const exec = async() =>{
+        init()
         const allId = await voteContract.current?.allIds()
-        const allPoll = await Promise?.all(
+        
+        const allPoll = await Promise.all(
             allId?.map((id) =>{
                 return VoteDetails(id)
             })
         )
-        console.log(allPoll)
+        
         const result = allPoll?.map((item,index) =>{
             return {
                 name:item.name,
@@ -96,7 +136,11 @@ export const useVoteDapp  = () =>{
 return {
     createPoll,
     addCandidate,
-    exec
+    exec,
+    setPollState,
+    revealWinnerCandidate,
+    VoteDetails,
+    voted
 }
 
 

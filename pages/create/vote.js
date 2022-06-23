@@ -25,6 +25,8 @@ function CreateVote() {
                 return toast.error(err)
                 const txn =await  res.wait();
                 const status = await txn.events[0].args[2].toString();
+                name.current.value ="";
+                maxmember.current.value ="";
                 toast.success("Voting poll created successfully")
                 router.push(`/dashboard/${status}`)
                 
