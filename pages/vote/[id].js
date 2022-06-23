@@ -25,7 +25,9 @@ function Vote() {
    
    useEffect(() =>{
     fetchDetails()
-  },[connected])
+  },
+  /* eslint-disable */
+  [connected])
 
 
 

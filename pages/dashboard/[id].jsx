@@ -30,7 +30,9 @@ const {connected} = useAppContext()
    useEffect(() =>{
       vote()
       revealCandidate()
-    },[connected])
+    },
+    /* eslint-disable */
+    [connected])
     
     
     const [winner,setWinner] = useState()
