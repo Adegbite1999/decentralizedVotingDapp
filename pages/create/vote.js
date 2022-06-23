@@ -22,7 +22,7 @@ function CreateVote() {
 
              await createPoll(nameField,maxmemberField, async(res,err) =>{
                 if(!res.hash)
-                return toast.error(err)
+                return toast.error(res.error.message)
                 const txn =await  res.wait();
                 const status = await txn.events[0].args[2].toString();
                 name.current.value ="";
