@@ -5,15 +5,18 @@ import {toast} from "react-toastify";
 import { useRouter,} from "next/router"
 import { useAppContext } from '../../context/appState';
 import Link from 'next/link';
+import {ethers, utils} from "ethers"
+import Modal from '../../components/Modal';
+
 
 function VoteDetails() {
 
   const address = useRef()
-  const name = useRef()
 
   const router = useRouter()
 
   const id = router.query
+
 
 
 const {connected} = useAppContext()
@@ -26,11 +29,13 @@ const {connected} = useAppContext()
    }
    useEffect(() =>{
       vote()
+      revealCandidate()
     },[connected])
     
     
-    const [winner,setWinner] = useState([])
+    const [winner,setWinner] = useState()
     const [detail, setDetail] = useState([])
+    const [show, setShow] = useState(false)
     
     
    const addCandidateHandler = async(e) =>{
@@ -38,16 +43,17 @@ const {connected} = useAppContext()
     const addressField = address.current.value;
     // const nameField = name.current.value;
 
+
     await addCandidate(addressField,id.id, async(res,err) =>{
     
       try {
         if(!res.hash)
-        return toast.error(err)
+        return toast.error(res.error.message)
         address.current.value = "",
       // name.current.value = ""
       toast.success("candidate added successfully")
       } catch (error) {
-        toast.error(error)
+        toast.error(error.message)
       }
       
     })
@@ -65,22 +71,21 @@ const {connected} = useAppContext()
     
       try {
         if(!res.hash)
-        return toast.error(err)
+        return toast.error(res.error.message)
         const txn = await res.wait();
         const status = txn.events[0].args[0]
       toast.success(`status voting has been set to ${status}`)
       } catch (error) {
-        toast.error(error)
+       console.error(error)
       }
 
     })
   }
 
-  // const revealCandidate = async (e) =>{
-  //   e.preventDefault()
-  //   const result = await revealWinnerCandidate(id.id)
-  //   console.log(result)
-  // } 
+  const revealCandidate = async () =>{
+    const result = await revealWinnerCandidate(id.id)
+    setWinner(result)
+  } 
 
   return (
     <LayOut>
@@ -108,7 +113,7 @@ const {connected} = useAppContext()
               />
             </div> */}
             <div className='flex justify-center'>
-            <button onClick={addCandidateHandler} className='bg-[#00E3A5] mt-4 text-center pr-6 rounded-sm pl-6 font-bold'>Submit</button>
+            <button onClick={addCandidateHandler} className='bg-[#00E3A5] mt-4 text-center text-white pr-6 rounded-sm pl-6 font-bold'>Submit</button>
             </div>
             </form>
         </div>
@@ -116,10 +121,22 @@ const {connected} = useAppContext()
         <div>
           <button onClick={activatePoll} className="bg-red-500 text-white pr-6 rounded-sm pl-6 font-bold">Start Poll/ End Poll</button>
         </div>
-        
+
         <div>
-          <button  className="bg-[#00E3A5] pr-6 text-white rounded-sm pl-6 font-bold">Reveal Winner</button>
+        <button onClick={() => setShow(true)}  className="bg-[#00E3A5] pr-6 text-white rounded-sm pl-6 ml-4 font-bold">Reveal Winner</button>
         </div>
+        <Modal show={show} onClose={() => setShow(!true)}>
+         <p className='text-white font-bold flex'>Winner:
+          {
+           winner?.[1] === ethers.constants.AddressZero && <p className=' ml-2 text-white'>No winner yet</p>
+          }
+          </p>
+          <div className='text-white font-bold flex'>Vote Count: 
+          <span className='ml-2'>{
+          winner? winner?.[2].toString() : <p>0</p>
+          } </span>
+          </div> 
+          </Modal>
         </div>
         </div>
     </section>

@@ -1,4 +1,4 @@
-export const contractAddress = "0x531D8b6e31969317843d73dE27D5B226169b423C"
+export const contractAddress = "0xf47cffc957d5623569f755db8f4c6df7135ef616"
 export const rpc_url = "https://eth-rinkeby.alchemyapi.io/v2/LBU4Gg9IudCK7JoySNaYkMaldjSHh8su"
 
 
